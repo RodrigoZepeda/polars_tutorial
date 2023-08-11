@@ -9,7 +9,7 @@
 <meta name="author" content="Rodrigo Zepeda-Tello">
 <meta name="dcterms.date" content="2023-08-10">
 
-<title>Polars crashcourse (basic polars)</title>
+<title>Polars crashcourse (part 1)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -102,6 +102,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -110,7 +111,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Polars crashcourse (basic polars)</h1>
+      <h1 class="title">Polars crashcourse (part 1)</h1>
                       </div>
   </div>
     
@@ -171,7 +172,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#special-selectors" id="toc-special-selectors" class="nav-link" data-scroll-target="#special-selectors"><span class="toc-section-number">5.1.3</span>  Special selectors</a></li>
   <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1"><span class="toc-section-number">5.1.4</span>  Exercise</a></li>
   </ul></li>
-  <li><a href="#how-to" id="toc-how-to" class="nav-link" data-scroll-target="#how-to"><span class="toc-section-number">5.2</span>  How to</a></li>
+  <li><a href="#how-to-change-columns" id="toc-how-to-change-columns" class="nav-link" data-scroll-target="#how-to-change-columns"><span class="toc-section-number">5.2</span>  How to change columns</a>
+  <ul class="collapse">
+  <li><a href="#with_columns" id="toc-with_columns" class="nav-link" data-scroll-target="#with_columns"><span class="toc-section-number">5.2.1</span>  <code>with_columns</code></a></li>
+  <li><a href="#lit" id="toc-lit" class="nav-link" data-scroll-target="#lit"><span class="toc-section-number">5.2.2</span>  <code>lit</code></a></li>
+  <li><a href="#when-then-otherwise" id="toc-when-then-otherwise" class="nav-link" data-scroll-target="#when-then-otherwise"><span class="toc-section-number">5.2.3</span>  <code>when</code>, <code>then</code>, <code>otherwise</code></a></li>
+  <li><a href="#rename" id="toc-rename" class="nav-link" data-scroll-target="#rename"><span class="toc-section-number">5.2.4</span>  <code>rename</code></a></li>
+  <li><a href="#additional-stuff-max_horizontal-min_horizontal-and-cumsum_horizontal" id="toc-additional-stuff-max_horizontal-min_horizontal-and-cumsum_horizontal" class="nav-link" data-scroll-target="#additional-stuff-max_horizontal-min_horizontal-and-cumsum_horizontal"><span class="toc-section-number">5.2.5</span>  Additional stuff: <code>max_horizontal</code>, <code>min_horizontal</code> and <code>cumsum_horizontal</code></a></li>
+  <li><a href="#passing-arbitrary-functions" id="toc-passing-arbitrary-functions" class="nav-link" data-scroll-target="#passing-arbitrary-functions"><span class="toc-section-number">5.2.6</span>  Passing arbitrary functions</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2"><span class="toc-section-number">5.2.7</span>  Exercise</a></li>
+  </ul></li>
+  <li><a href="#how-to-aggregate-columns" id="toc-how-to-aggregate-columns" class="nav-link" data-scroll-target="#how-to-aggregate-columns"><span class="toc-section-number">5.3</span>  How to aggregate columns</a>
+  <ul class="collapse">
+  <li><a href="#aggregation-functions" id="toc-aggregation-functions" class="nav-link" data-scroll-target="#aggregation-functions"><span class="toc-section-number">5.3.1</span>  Aggregation functions</a></li>
+  <li><a href="#grouping" id="toc-grouping" class="nav-link" data-scroll-target="#grouping"><span class="toc-section-number">5.3.2</span>  Grouping</a></li>
+  <li><a href="#unique-values" id="toc-unique-values" class="nav-link" data-scroll-target="#unique-values"><span class="toc-section-number">5.3.3</span>  <code>unique</code> values</a></li>
+  <li><a href="#exercise-3" id="toc-exercise-3" class="nav-link" data-scroll-target="#exercise-3"><span class="toc-section-number">5.3.4</span>  Exercise</a></li>
+  </ul></li>
+  <li><a href="#timeseries-specific-functionality" id="toc-timeseries-specific-functionality" class="nav-link" data-scroll-target="#timeseries-specific-functionality"><span class="toc-section-number">5.4</span>  Timeseries specific functionality</a></li>
+  <li><a href="#casting" id="toc-casting" class="nav-link" data-scroll-target="#casting"><span class="toc-section-number">5.5</span>  Casting</a></li>
+  <li><a href="#rolling-functions" id="toc-rolling-functions" class="nav-link" data-scroll-target="#rolling-functions"><span class="toc-section-number">5.6</span>  Rolling functions</a>
+  <ul class="collapse">
+  <li><a href="#writing" id="toc-writing" class="nav-link" data-scroll-target="#writing"><span class="toc-section-number">5.6.1</span>  Writing</a></li>
+  <li><a href="#exercise-4" id="toc-exercise-4" class="nav-link" data-scroll-target="#exercise-4"><span class="toc-section-number">5.6.2</span>  Exercise</a></li>
+  </ul></li>
+  <li><a href="#where-to-go-from-here" id="toc-where-to-go-from-here" class="nav-link" data-scroll-target="#where-to-go-from-here"><span class="toc-section-number">5.7</span>  Where to go from here?</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -181,6 +206,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body" title="Notebook">
+<p>You can download this notebook <a href="https://github.com/RodrigoZepeda/polars_tutorial/blob/main/basic_polars.ipynb">from Github</a></p>
+</div>
+</div>
 <section id="why-polars" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Why polars?</h1>
 <p>There are three characteristics which, from my perspective, make <code>polars</code> a pretty cool library:</p>
@@ -236,17 +274,18 @@ Important
 <h2 data-number="2.3" class="anchored" data-anchor-id="additional-modules"><span class="header-section-number">2.3</span> Additional modules</h2>
 <p>Some of the modules we are using for this tutorial are:</p>
 <ol type="1">
-<li><strong>os</strong> For setting file paths, directories and other operating-system dependent functions.</li>
-<li><strong>polars</strong> Basic for the tutorial!</li>
-<li><strong>pandas</strong> To transform the data so that the jupyter notebook and the seaborn plots can use them</li>
-<li><strong>seaborn</strong> For creating nice plots.</li>
+<li><p><strong>os</strong> For setting file paths, directories and other operating-system dependent functions.</p></li>
+<li><p><strong>polars</strong> Basic for the tutorial!</p></li>
+<li><p><strong>pandas</strong> To transform the data so that the jupyter notebook and the seaborn plots can use them</p></li>
+<li><p><strong>numpy</strong> For special numeric functions</p></li>
 </ol>
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Loading modules</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -256,11 +295,11 @@ Important
 <h2 data-number="3.1" class="anchored" data-anchor-id="basic-reading"><span class="header-section-number">3.1</span> Basic reading</h2>
 <p>Data can be read from <code>csv</code> files (<code>read_csv</code>), <code>parquet</code> files<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> (<code>read_parquet</code>), <code>Excel</code> files (<code>read_excel</code>) and databases from other sources such as <code>SQL</code> (<code>read_database</code>) and Delta Lakes (<code>read_delta</code>). See <a href="https://pola-rs.github.io/polars/py-polars/html/reference/io.html">the documentation</a> for more database-input options.</p>
 <p>One can read the penguins <code>csv</code> file:</p>
-<div class="cell" data-execution_count="32">
+<div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pl.read_csv(<span class="st">"penguins.csv"</span>, null_values <span class="op">=</span> <span class="st">"NA"</span>) <span class="co">#Missing values in the csv are represented as "NA"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>A quick description of the variables can be obtained with <code>glimpse</code>:</p>
-<div class="cell" data-execution_count="33">
+<div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>penguins.glimpse()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 344
@@ -303,7 +342,7 @@ and 344 rows.</code></pre>
   text-align: right;
 }
 </style>
-<small>shape: (7, 8)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>"39.1"</td><td>"18.7"</td><td>"181"</td><td>"3750"</td><td>"male"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>"39.5"</td><td>"17.4"</td><td>"186"</td><td>"3800"</td><td>"female"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>"40.3"</td><td>"18"</td><td>"195"</td><td>"3250"</td><td>"female"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>"NA"</td><td>"NA"</td><td>"NA"</td><td>"NA"</td><td>"NA"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>"36.7"</td><td>"19.3"</td><td>"193"</td><td>"3450"</td><td>"female"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>"39.3"</td><td>"20.6"</td><td>"190"</td><td>"3650"</td><td>"male"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>"38.9"</td><td>"17.8"</td><td>"181"</td><td>"3625"</td><td>"female"</td><td>2007</td></tr></tbody></table></div>
+<small>shape: (7, 8)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.1</td><td>18.7</td><td>181</td><td>3750</td><td>"male"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.5</td><td>17.4</td><td>186</td><td>3800</td><td>"female"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>40.3</td><td>18.0</td><td>195</td><td>3250</td><td>"female"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>36.7</td><td>19.3</td><td>193</td><td>3450</td><td>"female"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.3</td><td>20.6</td><td>190</td><td>3650</td><td>"male"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>38.9</td><td>17.8</td><td>181</td><td>3625</td><td>"female"</td><td>2007</td></tr></tbody></table></div>
 </div>
 </div>
 <p>The last <code>n=3</code> rows of the dataset can be displayed with <code>tail</code>:</p>
@@ -317,11 +356,11 @@ and 344 rows.</code></pre>
   text-align: right;
 }
 </style>
-<small>shape: (3, 8)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>"Chinstrap"</td><td>"Dream"</td><td>"49.6"</td><td>"18.2"</td><td>"193"</td><td>"3775"</td><td>"male"</td><td>2009</td></tr><tr><td>"Chinstrap"</td><td>"Dream"</td><td>"50.8"</td><td>"19"</td><td>"210"</td><td>"4100"</td><td>"male"</td><td>2009</td></tr><tr><td>"Chinstrap"</td><td>"Dream"</td><td>"50.2"</td><td>"18.7"</td><td>"198"</td><td>"3775"</td><td>"female"</td><td>2009</td></tr></tbody></table></div>
+<small>shape: (3, 8)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>"Chinstrap"</td><td>"Dream"</td><td>49.6</td><td>18.2</td><td>193</td><td>3775</td><td>"male"</td><td>2009</td></tr><tr><td>"Chinstrap"</td><td>"Dream"</td><td>50.8</td><td>19.0</td><td>210</td><td>4100</td><td>"male"</td><td>2009</td></tr><tr><td>"Chinstrap"</td><td>"Dream"</td><td>50.2</td><td>18.7</td><td>198</td><td>3775</td><td>"female"</td><td>2009</td></tr></tbody></table></div>
 </div>
 </div>
 <p>By default, jupyter notebooks only allow us to display a certain amount of rows (<code>display.max_rows</code>), columns (<code>display.max_columns</code>) and with a certain width (<code>display.max_colwidth</code>). This can be changed globally by putting <code>pd.option_context</code> at the start of the script or just for one print with a <code>with</code> (which creates a <a href="https://book.pythontips.com/en/latest/context_managers.html">context</a>). As jupyter is designed for <code>pandas</code> one needs to convert the polars <code>DataFrame</code> into a <code>pandas</code> one with <code>to_pandas()</code>. For example, here we are only showing the first <code>3</code> columns (including the row number) and <code>12</code> rows:</p>
-<div class="cell" data-execution_count="17">
+<div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> pd.option_context(<span class="st">'display.max_rows'</span>, <span class="dv">12</span>, <span class="st">'display.max_columns'</span>, <span class="dv">3</span>,<span class="st">'display.max_colwidth'</span>, <span class="va">None</span>):</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    display(penguins.to_pandas().head(n<span class="op">=</span><span class="dv">12</span>)) <span class="co">#Notice that head must be specified here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -417,9 +456,9 @@ and 344 rows.</code></pre>
 </div>
 </div>
 <p>The <code>sample</code> command obtains a random sample (without replacement) of the rows of size <code>n</code> and keeps it. This command is ideal for debugging <code>polars</code> programs as it allows the user to create a smaller database of which one can keep a track of. For example, the following obtains a random sample of size <code>9</code> of the data:</p>
-<div class="cell" data-execution_count="20">
+<div class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>penguins.sample(n <span class="op">=</span> <span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
+<div class="cell-output cell-output-display" data-execution_count="9">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -427,13 +466,13 @@ and 344 rows.</code></pre>
   text-align: right;
 }
 </style>
-<small>shape: (9, 8)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Dream"</td><td>"39.2"</td><td>"18.6"</td><td>"190"</td><td>"4250"</td><td>"male"</td><td>2009</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>"47.7"</td><td>"15"</td><td>"216"</td><td>"4750"</td><td>"female"</td><td>2008</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>"47.6"</td><td>"14.5"</td><td>"215"</td><td>"5400"</td><td>"male"</td><td>2007</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>"50.8"</td><td>"15.7"</td><td>"226"</td><td>"5200"</td><td>"male"</td><td>2009</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>"52.5"</td><td>"15.6"</td><td>"221"</td><td>"5450"</td><td>"male"</td><td>2009</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>"50.5"</td><td>"15.9"</td><td>"222"</td><td>"5550"</td><td>"male"</td><td>2008</td></tr><tr><td>"Adelie"</td><td>"Biscoe"</td><td>"40.6"</td><td>"18.6"</td><td>"183"</td><td>"3550"</td><td>"male"</td><td>2007</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>"49.6"</td><td>"15"</td><td>"216"</td><td>"4750"</td><td>"male"</td><td>2008</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>"39"</td><td>"17.1"</td><td>"191"</td><td>"3050"</td><td>"female"</td><td>2009</td></tr></tbody></table></div>
+<small>shape: (9, 8)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Biscoe"</td><td>37.6</td><td>19.1</td><td>194</td><td>3750</td><td>"male"</td><td>2008</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>45.0</td><td>15.4</td><td>220</td><td>5050</td><td>"male"</td><td>2008</td></tr><tr><td>"Adelie"</td><td>"Biscoe"</td><td>36.5</td><td>16.6</td><td>181</td><td>2850</td><td>"female"</td><td>2008</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>52.2</td><td>17.1</td><td>228</td><td>5400</td><td>"male"</td><td>2009</td></tr><tr><td>"Adelie"</td><td>"Biscoe"</td><td>38.6</td><td>17.2</td><td>199</td><td>3750</td><td>"female"</td><td>2009</td></tr><tr><td>"Chinstrap"</td><td>"Dream"</td><td>49.0</td><td>19.5</td><td>210</td><td>3950</td><td>"male"</td><td>2008</td></tr><tr><td>"Adelie"</td><td>"Dream"</td><td>39.5</td><td>16.7</td><td>178</td><td>3250</td><td>"female"</td><td>2007</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>49.6</td><td>16.0</td><td>225</td><td>5700</td><td>"male"</td><td>2008</td></tr><tr><td>"Chinstrap"</td><td>"Dream"</td><td>49.6</td><td>18.2</td><td>193</td><td>3775</td><td>"male"</td><td>2009</td></tr></tbody></table></div>
 </div>
 </div>
 <p>To obtain an array of the column names one can do:</p>
-<div class="cell" data-execution_count="38">
+<div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>penguins.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="38">
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>['species',
  'island',
  'bill_length_mm',
@@ -449,17 +488,17 @@ and 344 rows.</code></pre>
 <h2 data-number="3.2" class="anchored" data-anchor-id="advanced-reading-scanning"><span class="header-section-number">3.2</span> Advanced reading (scanning)</h2>
 <p>Larger datasets benefit from <code>scanning</code>. When a file is <code>scanned</code> it is not read. <code>polars</code> only registers that it <code>will</code>read it. To actually read it you need to perform a <code>collect</code> after a scan. This is useful as <code>polars</code> optimizes all the queries you produce into the scan so that when you <code>collect</code> you obtain a <code>faster</code> result than performing the operations one by one.</p>
 <p>Let’s see an example by reading the <code>covidmx</code> dataset and removing all rows except for those ones that occured in Mexico City which corresponds to <code>ENTIDAD_UM == "09"</code>.</p>
-<div class="cell" data-execution_count="24">
+<div class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit <span class="op">-</span>n1 <span class="op">-</span>r1 pl.read_parquet(<span class="st">"covidmx.parquet"</span>).<span class="bu">filter</span>(pl.col(<span class="st">"ENTIDAD_UM"</span>) <span class="op">==</span> <span class="st">"09"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>20.4 s ± 0 ns per loop (mean ± std. dev. of 1 run, 1 loop each)</code></pre>
+<pre><code>20.9 s ± 0 ns per loop (mean ± std. dev. of 1 run, 1 loop each)</code></pre>
 </div>
 </div>
 <p>The previous line <code>reads</code> the complete file <em>and then</em> filters by ensuring to keep only the values where the column <code>ENTIDAD_UM</code> equals <code>"09"</code>. If we use <code>scan</code> its way faster as it will collapses the <code>scan</code> and the <code>filter</code> into one operation and reads only the columns that have a <code>09</code> value</p>
-<div class="cell" data-execution_count="25">
+<div class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit <span class="op">-</span>n1 <span class="op">-</span>r1 pl.scan_parquet(<span class="st">"covidmx.parquet"</span>).<span class="bu">filter</span>(pl.col(<span class="st">"ENTIDAD_UM"</span>) <span class="op">==</span> <span class="st">"09"</span>).collect()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>10.2 s ± 0 ns per loop (mean ± std. dev. of 1 run, 1 loop each)</code></pre>
+<pre><code>9.13 s ± 0 ns per loop (mean ± std. dev. of 1 run, 1 loop each)</code></pre>
 </div>
 </div>
 <p>This idea of not conducting all operations till all the queries are given is called <strong><a href="https://en.wikipedia.org/wiki/Lazy_evaluation">lazy evaluation</a></strong> and is one of the keys for <code>polars</code>’ speed.</p>
@@ -486,9 +525,9 @@ and 344 rows.</code></pre>
 <section id="simd" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="simd"><span class="header-section-number">4.1</span> SIMD</h2>
 <p>Let’s think of the data for a second. Consider the first five entries of the following subset of the data:</p>
-<div class="cell" data-execution_count="37">
+<div class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>penguins.select(pl.col(<span class="st">"bill_length_mm"</span>,<span class="st">"sex"</span>,<span class="st">"year"</span>)).head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="37">
+<div class="cell-output cell-output-display" data-execution_count="13">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -529,9 +568,9 @@ and 344 rows.</code></pre>
 </figure>
 </div>
 <p>The <code>select</code> command allows users to choose which columns to keep. This can be done by specifying the columns:</p>
-<div class="cell" data-execution_count="41">
+<div class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>penguins.select(pl.col(<span class="st">"sex"</span>,<span class="st">"species"</span>)).head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="41">
+<div class="cell-output cell-output-display" data-execution_count="14">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -555,11 +594,11 @@ Tip
 <p>Code is usually formatted rowwise to avoid run-ons so that each instruction has its row</p>
 </div>
 </div>
-<div class="cell" data-execution_count="42">
+<div class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a> .select(pl.col(<span class="st">"sex"</span>,<span class="st">"species"</span>))</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="42">
+<div class="cell-output cell-output-display" data-execution_count="15">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -571,11 +610,11 @@ Tip
 </div>
 </div>
 <p>One can select all columns with <code>.all</code>:</p>
-<div class="cell" data-execution_count="43">
+<div class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a> .select(pl.<span class="bu">all</span>())</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="43">
+<div class="cell-output cell-output-display" data-execution_count="16">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -587,11 +626,11 @@ Tip
 </div>
 </div>
 <p>The <code>all</code> command can be combined with the <code>exclude</code> to remove specific columns:</p>
-<div class="cell" data-execution_count="44">
+<div class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a> .select(pl.<span class="bu">all</span>().exclude(<span class="st">"island"</span>))</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="44">
+<div class="cell-output cell-output-display" data-execution_count="17">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -603,11 +642,11 @@ Tip
 </div>
 </div>
 <p>The previous code is equivalent to using the <code>drop</code> function. Note that by design <code>drop</code> doesn’t use <code>pl.col</code> while <code>select</code> does.</p>
-<div class="cell" data-execution_count="80">
+<div class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a> .drop(<span class="st">"island"</span>)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="80">
+<div class="cell-output cell-output-display" data-execution_count="18">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -619,13 +658,13 @@ Tip
 </div>
 </div>
 <p><a href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference">Regular expressions</a> can be used to select or exclude specific columns matching the expression. For example, to keep those that end up in <code>mm</code>:</p>
-<div class="cell" data-execution_count="52">
+<div class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars.selectors <span class="im">as</span> cs</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a> .select(cs.matches(<span class="st">"_mm"</span>))</span>
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="52">
+<div class="cell-output cell-output-display" data-execution_count="19">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -637,11 +676,11 @@ Tip
 </div>
 </div>
 <p>To exclude them one needs to negate the operation with <code>~</code>:</p>
-<div class="cell" data-execution_count="53">
+<div class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a> .select(<span class="op">~</span>cs.matches(<span class="st">"_mm"</span>))</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="53">
+<div class="cell-output cell-output-display" data-execution_count="20">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -653,11 +692,11 @@ Tip
 </div>
 </div>
 <p>Boolean operations can be applied inside a <code>select</code> thus allowing to apply an <strong>and</strong></p>
-<div class="cell" data-execution_count="54">
+<div class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a> .select(cs.matches(<span class="st">"_mm"</span>) <span class="op">&amp;</span> cs.matches(<span class="st">"length"</span>))</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="54">
+<div class="cell-output cell-output-display" data-execution_count="21">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -669,11 +708,11 @@ Tip
 </div>
 </div>
 <p>or an <strong>or</strong></p>
-<div class="cell" data-execution_count="57">
+<div class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a> .select(cs.matches(<span class="st">"_mm"</span>) <span class="op">|</span> cs.matches(<span class="st">"island"</span>))</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="57">
+<div class="cell-output cell-output-display" data-execution_count="22">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -685,12 +724,12 @@ Tip
 </div>
 </div>
 <p>Columns can also be selected by <code>dtype</code> with the <code>cs.integer()</code>, <code>cs.float()</code>, <code>cs.numeric()</code> (float and int), <code>cs.string()</code>, <code>cs.datetime()</code> as well as <a href="https://pola-rs.github.io/polars/py-polars/html/reference/selectors.html#functions">additional selectors</a> specified in the manual</p>
-<div class="cell" data-execution_count="61">
+<div class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Select all numeric except year. The - acts as a set difference operator.</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a> .select(cs.numeric() <span class="op">-</span> cs.matches(<span class="st">"year"</span>)) </span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="61">
+<div class="cell-output cell-output-display" data-execution_count="23">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -711,11 +750,11 @@ Tip
 </figure>
 </div>
 <p>The <code>filter</code> command allows users to choose which rows to keep based upon some <code>boolean</code> conditions of the columns. For example one can select those penguins which have a <code>body_mass_g</code> greater than <code>3500</code></p>
-<div class="cell" data-execution_count="64">
+<div class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a> .<span class="bu">filter</span>(pl.col(<span class="st">"body_mass_g"</span>) <span class="op">&gt;=</span> <span class="dv">3500</span>)</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="64">
+<div class="cell-output cell-output-display" data-execution_count="24">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -727,12 +766,12 @@ Tip
 </div>
 </div>
 <p>More complicated filters can be obtained by combining the logical and <code>&amp;</code>, or <code>|</code>, not <code>~</code> and difference <code>-</code> operators:</p>
-<div class="cell" data-execution_count="70">
+<div class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only Gentoo penguins with bills larger than 50 or flippers smaller than 170. </span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>(penguins</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a> .<span class="bu">filter</span>((pl.col(<span class="st">"species"</span>) <span class="op">==</span> <span class="st">"Gentoo"</span>) <span class="op">&amp;</span> ((pl.col(<span class="st">"flipper_length_mm"</span>) <span class="op">&lt;</span> <span class="dv">170</span>) <span class="op">|</span> (pl.col(<span class="st">"bill_length_mm"</span>) <span class="op">&gt;</span> <span class="dv">50</span>)))</span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="70">
+<div class="cell-output cell-output-display" data-execution_count="25">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -741,6 +780,22 @@ Tip
 }
 </style>
 <small>shape: (5, 8)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>50.2</td><td>14.3</td><td>218</td><td>5700</td><td>"male"</td><td>2007</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>59.6</td><td>17.0</td><td>230</td><td>6050</td><td>"male"</td><td>2007</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>50.5</td><td>15.9</td><td>222</td><td>5550</td><td>"male"</td><td>2008</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>50.5</td><td>15.9</td><td>225</td><td>5400</td><td>"male"</td><td>2008</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>50.1</td><td>15.0</td><td>225</td><td>5000</td><td>"male"</td><td>2008</td></tr></tbody></table></div>
+</div>
+</div>
+<p>An important filtering command is the <code>is_in</code>. This checks whether a column is in an array of values:</p>
+<div class="cell" data-execution_count="82">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a> .<span class="bu">filter</span>(pl.col(<span class="st">"species"</span>).is_in([<span class="st">"Gentoo"</span>,<span class="st">"Adelie"</span>,<span class="st">"Happy Feet"</span>]))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a> .sample(n<span class="op">=</span><span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="82">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 8)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>46.7</td><td>15.3</td><td>219</td><td>5200</td><td>"male"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Dream"</td><td>36.0</td><td>17.8</td><td>195</td><td>3450</td><td>"female"</td><td>2009</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>43.5</td><td>15.2</td><td>213</td><td>4650</td><td>"female"</td><td>2009</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>38.5</td><td>17.9</td><td>190</td><td>3325</td><td>"female"</td><td>2009</td></tr><tr><td>"Gentoo"</td><td>"Biscoe"</td><td>45.1</td><td>14.5</td><td>207</td><td>5050</td><td>"female"</td><td>2007</td></tr></tbody></table></div>
 </div>
 </div>
 </section>
@@ -755,12 +810,12 @@ Tip
 <p></p><figcaption class="figure-caption"><code>take_every</code> chooses every nth row</figcaption><p></p>
 </figure>
 </div>
-<div class="cell" data-execution_count="72">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Return every third penguin</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>(penguins</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a> .take_every(n<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="72">
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Return every third penguin</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a> .take_every(n<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="26">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -781,12 +836,12 @@ Tip
 <p></p><figcaption class="figure-caption"><code>top_k</code> chooses every nth row</figcaption><p></p>
 </figure>
 </div>
-<div class="cell" data-execution_count="75">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Return the top 3 fatter penguins:</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>(penguins</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a> .top_k(k<span class="op">=</span><span class="dv">5</span>, by <span class="op">=</span> <span class="st">"body_mass_g"</span>, descending<span class="op">=</span><span class="va">True</span>, nulls_last<span class="op">=</span><span class="va">True</span>) </span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="75">
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Return the top 3 fatter penguins:</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a> .top_k(k<span class="op">=</span><span class="dv">5</span>, by <span class="op">=</span> <span class="st">"body_mass_g"</span>, descending<span class="op">=</span><span class="va">True</span>, nulls_last<span class="op">=</span><span class="va">True</span>) </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -807,13 +862,13 @@ Tip
 <p></p><figcaption class="figure-caption"><code>drop_null</code> removes all null rows that have null values from a column (or all columns)</figcaption><p></p>
 </figure>
 </div>
-<div class="cell" data-execution_count="85">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Compare against the take_every 3 previously specified</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>(penguins</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a> .take_every(n<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a> .drop_nulls([<span class="st">"bill_length_mm"</span>])</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="85">
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Compare against the take_every 3 previously specified</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a> .take_every(n<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a> .drop_nulls([<span class="st">"bill_length_mm"</span>])</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a> .head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
 
 <div><style>
 .dataframe > thead > tr > th,
@@ -837,8 +892,749 @@ Tip
 </ol>
 </section>
 </section>
-<section id="how-to" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="how-to"><span class="header-section-number">5.2</span> How to</h2>
+<section id="how-to-change-columns" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="how-to-change-columns"><span class="header-section-number">5.2</span> How to change columns</h2>
+<section id="with_columns" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="with_columns"><span class="header-section-number">5.2.1</span> <code>with_columns</code></h3>
+<p>To change columns one has to select the column with <code>pl.col</code> and then apply a function to it within the <code>with_columns</code> context. Here is an example where we transform the body mass in grams to kilograms dividing by 1000.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="df_images/with_cols.svg" class="img-fluid figure-img" style="width:75.0%"></p>
+<p></p><figcaption class="figure-caption"><code>with_columns</code> operates functions columnwise</figcaption><p></p>
+</figure>
+</div>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"body_mass_g"</span>)<span class="op">/</span><span class="dv">1000</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a> .head()</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 8)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>f64</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.1</td><td>18.7</td><td>181</td><td>3.75</td><td>"male"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.5</td><td>17.4</td><td>186</td><td>3.8</td><td>"female"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>40.3</td><td>18.0</td><td>195</td><td>3.25</td><td>"female"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>36.7</td><td>19.3</td><td>193</td><td>3.45</td><td>"female"</td><td>2007</td></tr></tbody></table></div>
+</div>
+</div>
+<p>To avoid overwritting columns we can save the new column using <code>alias</code></p>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    (pl.col(<span class="st">"body_mass_g"</span>)<span class="op">/</span><span class="dv">1000</span>).alias(<span class="st">"body_mass_kg"</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a> .head()</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 9)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th><th>body_mass_kg</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td><td>f64</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.1</td><td>18.7</td><td>181</td><td>3750</td><td>"male"</td><td>2007</td><td>3.75</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.5</td><td>17.4</td><td>186</td><td>3800</td><td>"female"</td><td>2007</td><td>3.8</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>40.3</td><td>18.0</td><td>195</td><td>3250</td><td>"female"</td><td>2007</td><td>3.25</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>2007</td><td>null</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>36.7</td><td>19.3</td><td>193</td><td>3450</td><td>"female"</td><td>2007</td><td>3.45</td></tr></tbody></table></div>
+</div>
+</div>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body" title="Format">
+<p>In general, columns can be modify within a <code>context</code>. For the purpose of the tutorial we’ll be using the <code>with_columns</code> context. However, this is not the only one and advanced users can take advantage of the <code>select</code> context to overwrite columns.</p>
+</div>
+</div>
+<p>Numpy’s <code>ufuncs</code> (special type of numpy functions) can be applied to each column. See <a href="https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs">here</a> for a list of all of the possible functions</p>
+<div class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    (np.log(pl.col(<span class="st">"bill_depth_mm"</span>))).alias(<span class="st">"bill_depth_log"</span>) <span class="co">#Set name with alias</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a> .head()</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/usr/local/Caskroom/miniconda/base/envs/polars tutorial/lib/python3.10/site-packages/polars/series/series.py:1114: RuntimeWarning: divide by zero encountered in log
+  series = f(lambda out: ufunc(*args, out=out, dtype=dtype_char, **kwargs))</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 9)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th><th>bill_depth_log</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td><td>f64</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.1</td><td>18.7</td><td>181</td><td>3750</td><td>"male"</td><td>2007</td><td>2.928524</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.5</td><td>17.4</td><td>186</td><td>3800</td><td>"female"</td><td>2007</td><td>2.85647</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>40.3</td><td>18.0</td><td>195</td><td>3250</td><td>"female"</td><td>2007</td><td>2.890372</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>2007</td><td>null</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>36.7</td><td>19.3</td><td>193</td><td>3450</td><td>"female"</td><td>2007</td><td>2.960105</td></tr></tbody></table></div>
+</div>
+</div>
+<p>It is also possible to apply a function across different columns using selections. For example transforming all milimiter variables to inches:</p>
+<div class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>to_inches <span class="op">=</span> <span class="fl">0.393701</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    (cs.ends_with(<span class="st">"mm"</span>)<span class="op">*</span>to_inches).suffix(<span class="st">"_inch"</span>)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a> .head()</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 11)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th><th>bill_length_mm_inch</th><th>bill_depth_mm_inch</th><th>flipper_length_mm_inch</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.1</td><td>18.7</td><td>181</td><td>3750</td><td>"male"</td><td>2007</td><td>15.393709</td><td>7.3622087</td><td>71.259881</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.5</td><td>17.4</td><td>186</td><td>3800</td><td>"female"</td><td>2007</td><td>15.55119</td><td>6.850397</td><td>73.228386</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>40.3</td><td>18.0</td><td>195</td><td>3250</td><td>"female"</td><td>2007</td><td>15.86615</td><td>7.086618</td><td>76.771695</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>2007</td><td>null</td><td>null</td><td>null</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>36.7</td><td>19.3</td><td>193</td><td>3450</td><td>"female"</td><td>2007</td><td>14.448827</td><td>7.598429</td><td>75.984293</td></tr></tbody></table></div>
+</div>
+</div>
+<p>Notice that the <code>suffix</code> (as well as <code>prefix</code>) add to the column name. More advanced names can be achieved via <a href="https://pola-rs.github.io/polars/py-polars/html/reference/expressions/api/polars.Expr.map_alias.html#polars.Expr.map_alias"><code>map_alias</code></a> which applies a function to the column names.</p>
+</section>
+<section id="lit" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="lit"><span class="header-section-number">5.2.2</span> <code>lit</code></h3>
+<p>To generate a new constant column one can use the <code>pl.lit</code> expression. The <code>alias</code> gives a name to the column</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="df_images/lit.svg" class="img-fluid figure-img" style="width:75.0%"></p>
+<p></p><figcaption class="figure-caption"><code>lit</code> creates a new column from a constant</figcaption><p></p>
+</figure>
+</div>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>     pl.lit(<span class="dv">13</span>).alias(<span class="st">"Unlucky column"</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a> .head()</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 9)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th><th>Unlucky column</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td><td>i32</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.1</td><td>18.7</td><td>181</td><td>3750</td><td>"male"</td><td>2007</td><td>13</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.5</td><td>17.4</td><td>186</td><td>3800</td><td>"female"</td><td>2007</td><td>13</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>40.3</td><td>18.0</td><td>195</td><td>3250</td><td>"female"</td><td>2007</td><td>13</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>2007</td><td>13</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>36.7</td><td>19.3</td><td>193</td><td>3450</td><td>"female"</td><td>2007</td><td>13</td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="when-then-otherwise" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="when-then-otherwise"><span class="header-section-number">5.2.3</span> <code>when</code>, <code>then</code>, <code>otherwise</code></h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="df_images/when_then_otherwise.svg" class="img-fluid figure-img" style="width:75.0%"></p>
+<p></p><figcaption class="figure-caption"><code>when</code>, <code>then</code>, <code>otherwise</code> apply different functions based upon distinct conditions</figcaption><p></p>
+</figure>
+</div>
+<p>Cases can be handled via the <code>when</code>, <code>then</code>, <code>otherwise</code> triad which work as an <code>if_else</code> or a <code>switch</code>. The <code>when</code> specifies a condition, <code>then</code> specifies the necessary operations and <code>otherwise</code> works as a default. For example, considering the following problem of classifying penguins as “large” if they are Adelie with mass larger than 4000. And “small” otherwise. This can be coded as follows:</p>
+<div class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>     pl.when((pl.col(<span class="st">"species"</span>) <span class="op">==</span> <span class="st">"Adelie"</span>) <span class="op">&amp;</span> pl.col(<span class="st">"body_mass_g"</span>) <span class="op">&gt;</span> <span class="dv">4000</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>       .then(pl.lit(<span class="st">"Large"</span>))</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>       .otherwise(pl.lit(<span class="st">"Small"</span>))</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>       .alias(<span class="st">"size"</span>)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a> .head()</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 9)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th><th>size</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td><td>str</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.1</td><td>18.7</td><td>181</td><td>3750</td><td>"male"</td><td>2007</td><td>"Small"</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.5</td><td>17.4</td><td>186</td><td>3800</td><td>"female"</td><td>2007</td><td>"Small"</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>40.3</td><td>18.0</td><td>195</td><td>3250</td><td>"female"</td><td>2007</td><td>"Small"</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>2007</td><td>"Small"</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>36.7</td><td>19.3</td><td>193</td><td>3450</td><td>"female"</td><td>2007</td><td>"Small"</td></tr></tbody></table></div>
+</div>
+</div>
+<p>Multiple <code>when</code> can be concatenated. For example to classify the <code>size</code> as large if:</p>
+<ul>
+<li><p><strong>Large</strong> if species is Adelie and body mass is larger than 4000</p></li>
+<li><p><strong>Medium</strong> if species is Adelie and body mass is between 3000 and 4000</p></li>
+<li><p><strong>Small</strong> if species is Adelie and body mass is lower than 3000</p></li>
+<li><p><strong>Unclassified</strong> if species is not Adelie</p></li>
+</ul>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>     pl.when((pl.col(<span class="st">"species"</span>) <span class="op">==</span> <span class="st">"Adelie"</span>) <span class="op">&amp;</span> (pl.col(<span class="st">"body_mass_g"</span>) <span class="op">&gt;</span> <span class="dv">4000</span>))</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>       .then(pl.lit(<span class="st">"Large"</span>))</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>       .when((pl.col(<span class="st">"species"</span>) <span class="op">==</span> <span class="st">"Adelie"</span>) <span class="op">&amp;</span> (pl.col(<span class="st">"body_mass_g"</span>) <span class="op">&gt;=</span> <span class="dv">3000</span>) <span class="op">&amp;</span> (pl.col(<span class="st">"body_mass_g"</span>) <span class="op">&lt;=</span> <span class="dv">4000</span>))</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>       .then(pl.lit(<span class="st">"Medium"</span>))</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>       .when((pl.col(<span class="st">"species"</span>) <span class="op">==</span> <span class="st">"Adelie"</span>) <span class="op">&amp;</span> (pl.col(<span class="st">"body_mass_g"</span>) <span class="op">&lt;</span> <span class="dv">3000</span>))</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>       .then(pl.lit(<span class="st">"Small"</span>))</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>       .otherwise(pl.lit(<span class="st">"Unclassified"</span>))</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>       .alias(<span class="st">"size"</span>)</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a> .head()</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 9)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th><th>size</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td><td>str</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.1</td><td>18.7</td><td>181</td><td>3750</td><td>"male"</td><td>2007</td><td>"Medium"</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.5</td><td>17.4</td><td>186</td><td>3800</td><td>"female"</td><td>2007</td><td>"Medium"</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>40.3</td><td>18.0</td><td>195</td><td>3250</td><td>"female"</td><td>2007</td><td>"Medium"</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>2007</td><td>"Unclassified"</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>36.7</td><td>19.3</td><td>193</td><td>3450</td><td>"female"</td><td>2007</td><td>"Medium"</td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="rename" class="level3" data-number="5.2.4">
+<h3 data-number="5.2.4" class="anchored" data-anchor-id="rename"><span class="header-section-number">5.2.4</span> <code>rename</code></h3>
+<p>To rename a column the <code>rename</code> function has got your back. You just have to state the <code>old_name: new_name</code></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="df_images/rename.svg" class="img-fluid figure-img" style="width:75.0%"></p>
+<p></p><figcaption class="figure-caption"><code>rename</code> changes the name of a column</figcaption><p></p>
+</figure>
+</div>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a> .rename({<span class="st">"bill_length_mm"</span>: <span class="st">"length_of_the_beak"</span>, <span class="st">"bill_depth_mm"</span>: <span class="st">"depth_of_the_beak"</span>})</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a> .head()</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 8)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>length_of_the_beak</th><th>depth_of_the_beak</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.1</td><td>18.7</td><td>181</td><td>3750</td><td>"male"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.5</td><td>17.4</td><td>186</td><td>3800</td><td>"female"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>40.3</td><td>18.0</td><td>195</td><td>3250</td><td>"female"</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>2007</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>36.7</td><td>19.3</td><td>193</td><td>3450</td><td>"female"</td><td>2007</td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="additional-stuff-max_horizontal-min_horizontal-and-cumsum_horizontal" class="level3" data-number="5.2.5">
+<h3 data-number="5.2.5" class="anchored" data-anchor-id="additional-stuff-max_horizontal-min_horizontal-and-cumsum_horizontal"><span class="header-section-number">5.2.5</span> Additional stuff: <code>max_horizontal</code>, <code>min_horizontal</code> and <code>cumsum_horizontal</code></h3>
+<p>These special functions get the maximum, minimum or cummulative sum across several columns. For example, consider the following <code>DataFrame</code>:</p>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.DataFrame({</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"a"</span>: [<span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">3</span>],</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"b"</span>: [<span class="dv">4</span>, <span class="dv">5</span>, <span class="va">None</span>],</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"c"</span>: [<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>],</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>df.with_columns(pl.max_horizontal(<span class="st">"a"</span>, <span class="st">"b"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (3, 4)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>a</th><th>b</th><th>c</th><th>max</th></tr><tr><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>1</td><td>4</td><td>1</td><td>4</td></tr><tr><td>8</td><td>5</td><td>1</td><td>8</td></tr><tr><td>3</td><td>null</td><td>1</td><td>3</td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="passing-arbitrary-functions" class="level3" data-number="5.2.6">
+<h3 data-number="5.2.6" class="anchored" data-anchor-id="passing-arbitrary-functions"><span class="header-section-number">5.2.6</span> Passing arbitrary functions</h3>
+<p>Arbitrary functions can be passed into the <code>with_columns</code>. One should avoid as much as possible passing arbitrary functions as rowwise functions are not optimized and thus kill polars parallelization (thus making it slower).</p>
+<div class="cell" data-execution_count="91">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Function calculates x^2</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> slow_square(x):</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co">#This calculates the squared of the bill_length _slowly_</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>     pl.col(<span class="st">"bill_length_mm"</span>).<span class="bu">apply</span>(slow_square).alias(<span class="st">"bill_length^2"</span>)</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a> .head()</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/42/2kdf45dd1qz5n7kf9lm8ld9r0000gn/T/ipykernel_42184/3456260424.py:8: PolarsInefficientApplyWarning: 
+Expr.apply is significantly slower than the native expressions API.
+Only use if you absolutely CANNOT implement your logic otherwise.
+In this case, you can replace your `apply` with the following:
+  - pl.col("bill_length_mm").apply(slow_square)
+  + pl.col("bill_length_mm") ** 2
+
+  pl.col("bill_length_mm").apply(slow_square).alias("bill_length^2")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="91">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 9)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th><th>bill_length^2</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>str</td><td>i64</td><td>f64</td></tr></thead><tbody><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.1</td><td>18.7</td><td>181</td><td>3750</td><td>"male"</td><td>2007</td><td>1528.81</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>39.5</td><td>17.4</td><td>186</td><td>3800</td><td>"female"</td><td>2007</td><td>1560.25</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>40.3</td><td>18.0</td><td>195</td><td>3250</td><td>"female"</td><td>2007</td><td>1624.09</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>2007</td><td>null</td></tr><tr><td>"Adelie"</td><td>"Torgersen"</td><td>36.7</td><td>19.3</td><td>193</td><td>3450</td><td>"female"</td><td>2007</td><td>1346.89</td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="exercise-2" class="level3" data-number="5.2.7">
+<h3 data-number="5.2.7" class="anchored" data-anchor-id="exercise-2"><span class="header-section-number">5.2.7</span> Exercise</h3>
+<ol type="1">
+<li><p>Create a new column with <code>body_mass</code> in pounds.</p></li>
+<li><p>Create a new column that assigns the coordinates for each of the islands:</p></li>
+</ol>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Island</th>
+<th>Coordinates</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Biscoe</td>
+<td>65°26′S 65°30′W</td>
+</tr>
+<tr class="even">
+<td>Dream</td>
+<td>64°44′S 64°14′W</td>
+</tr>
+<tr class="odd">
+<td>Torgersen</td>
+<td>64°46′S 64°5′W</td>
+</tr>
+</tbody>
+</table>
+<ol start="3" type="1">
+<li><strong>Biscoe</strong> island actually represents an archipelago. Rename the <code>island</code> column to <code>region</code> instead to better capture this nuance.</li>
+</ol>
+</section>
+</section>
+<section id="how-to-aggregate-columns" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="how-to-aggregate-columns"><span class="header-section-number">5.3</span> How to aggregate columns</h2>
+<p>All datasets can be aggregated with the describe function which counts the number of null observations and obtains some summary statistics</p>
+<div class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>penguins.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (9, 9)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>describe</th><th>species</th><th>island</th><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th><th>body_mass_g</th><th>sex</th><th>year</th></tr><tr><td>str</td><td>str</td><td>str</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>str</td><td>f64</td></tr></thead><tbody><tr><td>"count"</td><td>"344"</td><td>"344"</td><td>344.0</td><td>344.0</td><td>344.0</td><td>344.0</td><td>"344"</td><td>344.0</td></tr><tr><td>"null_count"</td><td>"0"</td><td>"0"</td><td>2.0</td><td>2.0</td><td>2.0</td><td>2.0</td><td>"11"</td><td>0.0</td></tr><tr><td>"mean"</td><td>null</td><td>null</td><td>43.92193</td><td>17.15117</td><td>200.915205</td><td>4201.754386</td><td>null</td><td>2008.02907</td></tr><tr><td>"std"</td><td>null</td><td>null</td><td>5.459584</td><td>1.974793</td><td>14.061714</td><td>801.954536</td><td>null</td><td>0.818356</td></tr><tr><td>"min"</td><td>"Adelie"</td><td>"Biscoe"</td><td>32.1</td><td>13.1</td><td>172.0</td><td>2700.0</td><td>"female"</td><td>2007.0</td></tr><tr><td>"max"</td><td>"Gentoo"</td><td>"Torgersen"</td><td>59.6</td><td>21.5</td><td>231.0</td><td>6300.0</td><td>"male"</td><td>2009.0</td></tr><tr><td>"median"</td><td>null</td><td>null</td><td>44.45</td><td>17.3</td><td>197.0</td><td>4050.0</td><td>null</td><td>2008.0</td></tr><tr><td>"25%"</td><td>null</td><td>null</td><td>39.2</td><td>15.6</td><td>190.0</td><td>3550.0</td><td>null</td><td>2007.0</td></tr><tr><td>"75%"</td><td>null</td><td>null</td><td>48.5</td><td>18.7</td><td>213.0</td><td>4750.0</td><td>null</td><td>2009.0</td></tr></tbody></table></div>
+</div>
+</div>
+<p>Each of these statistics corresponds to a function applied to the columns. We can replicate this by using aggregation functions:</p>
+<section id="aggregation-functions" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="aggregation-functions"><span class="header-section-number">5.3.1</span> Aggregation functions</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="df_images/aggregate.svg" class="img-fluid figure-img" style="width:35.0%"></p>
+<p></p><figcaption class="figure-caption"><code>Aggregation functions</code> apply a function <span class="math inline">\(\mathbb{R}^n\to \mathbb{R}\)</span> which collapses all column elements into a single number</figcaption><p></p>
+</figure>
+</div>
+<p>The <a href="https://pola-rs.github.io/polars/py-polars/html/reference/dataframe/aggregation.html">aggregation functions</a> apply a function to summarize column values. Basically it applies a function to the whole column and returns one value (for example the mean). This is different from the <code>with_columns</code> as the latter applies a function <span class="math inline">\(\mathbb{R}\to\mathbb{R}\)</span> that returns a value for each element in the column. Meanwhile, aggregation functions collapse all columns into a value</p>
+<div class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a> .select(<span class="st">"bill_length_mm"</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a> .mean() <span class="co">#Aggregation function of mean</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="49">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (1, 1)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>bill_length_mm</th></tr><tr><td>f64</td></tr></thead><tbody><tr><td>43.92193</td></tr></tbody></table></div>
+</div>
+</div>
+<div class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a> .select(cs.ends_with(<span class="st">"mm"</span>))</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a> .std() <span class="co">#Aggregation function of standard deviation</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="51">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (1, 3)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>bill_length_mm</th><th>bill_depth_mm</th><th>flipper_length_mm</th></tr><tr><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>5.459584</td><td>1.974793</td><td>14.061714</td></tr></tbody></table></div>
+</div>
+</div>
+<div class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a> .select(cs.starts_with(<span class="st">"bill"</span>))</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a> .quantile(<span class="fl">0.1</span>) <span class="co">#Aggregation function of quantile 0.1</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (1, 2)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>bill_length_mm</th><th>bill_depth_mm</th></tr><tr><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>36.6</td><td>14.3</td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="grouping" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="grouping"><span class="header-section-number">5.3.2</span> Grouping</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="df_images/groupby.svg" class="img-fluid figure-img" style="width:35.0%"></p>
+<p></p><figcaption class="figure-caption"><code>groupby</code> creates a context so that we can aggregate by another column</figcaption><p></p>
+</figure>
+</div>
+<p>Grouping is one of the most important concepts in data analysis. It allows us to perform an operation on a column based upon the values of another column. For example, one can obtain the mean body mass by sex:</p>
+<div class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a> .groupby(<span class="st">"sex"</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a> .agg(</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>     pl.col(<span class="st">"body_mass_g"</span>).mean()</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="56">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (3, 2)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>sex</th><th>body_mass_g</th></tr><tr><td>str</td><td>f64</td></tr></thead><tbody><tr><td>"female"</td><td>3862.272727</td></tr><tr><td>"male"</td><td>4545.684524</td></tr><tr><td>null</td><td>4005.555556</td></tr></tbody></table></div>
+</div>
+</div>
+<p>Grouping supports multiple variables and multiple aggregations via <code>agg</code></p>
+<div class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a> .groupby([<span class="st">"sex"</span>,<span class="st">"species"</span>])</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a> .agg(</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>     pl.col(<span class="st">"body_mass_g"</span>).mean().alias(<span class="st">"average"</span>),</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>     pl.col(<span class="st">"body_mass_g"</span>).std().alias(<span class="st">"standard deviation"</span>)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="60">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (8, 4)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>sex</th><th>species</th><th>average</th><th>standard deviation</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>"female"</td><td>"Adelie"</td><td>3368.835616</td><td>269.380102</td></tr><tr><td>"male"</td><td>"Gentoo"</td><td>5484.836066</td><td>313.158596</td></tr><tr><td>null</td><td>"Adelie"</td><td>3540.0</td><td>477.166114</td></tr><tr><td>"female"</td><td>"Chinstrap"</td><td>3527.205882</td><td>285.333912</td></tr><tr><td>"male"</td><td>"Adelie"</td><td>4043.493151</td><td>346.811553</td></tr><tr><td>"female"</td><td>"Gentoo"</td><td>4679.741379</td><td>281.578294</td></tr><tr><td>"male"</td><td>"Chinstrap"</td><td>3938.970588</td><td>362.13755</td></tr><tr><td>null</td><td>"Gentoo"</td><td>4587.5</td><td>338.193731</td></tr></tbody></table></div>
+</div>
+</div>
+<p>For discrete variables such as <code>sex</code> and <code>species</code> aggregators also exist such as <code>count</code>:</p>
+<div class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a> .groupby([<span class="st">"sex"</span>,<span class="st">"species"</span>])</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a> .agg(</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>     pl.count() <span class="co">#Count number of observations</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a> ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="64">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (8, 3)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>sex</th><th>species</th><th>count</th></tr><tr><td>str</td><td>str</td><td>u32</td></tr></thead><tbody><tr><td>"male"</td><td>"Gentoo"</td><td>61</td></tr><tr><td>"male"</td><td>"Chinstrap"</td><td>34</td></tr><tr><td>"male"</td><td>"Adelie"</td><td>73</td></tr><tr><td>"female"</td><td>"Gentoo"</td><td>58</td></tr><tr><td>"female"</td><td>"Chinstrap"</td><td>34</td></tr><tr><td>null</td><td>"Adelie"</td><td>6</td></tr><tr><td>"female"</td><td>"Adelie"</td><td>73</td></tr><tr><td>null</td><td>"Gentoo"</td><td>5</td></tr></tbody></table></div>
+</div>
+</div>
+<p>Multiple of the commands we know can be combined as in the following example which calculates the proportion of females per species</p>
+<div class="cell" data-execution_count="75">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a> .groupby([<span class="st">"sex"</span>,<span class="st">"species"</span>])</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a> .agg(</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>     pl.count() <span class="co">#Count number of observations</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>     pl.col(<span class="st">"count"</span>)<span class="op">/</span>pl.col(<span class="st">"count"</span>).<span class="bu">sum</span>()</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a> .<span class="bu">filter</span>(pl.col(<span class="st">"sex"</span>) <span class="op">==</span> <span class="st">"female"</span>)</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="75">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (3, 3)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>sex</th><th>species</th><th>count</th></tr><tr><td>str</td><td>str</td><td>f64</td></tr></thead><tbody><tr><td>"female"</td><td>"Adelie"</td><td>0.212209</td></tr><tr><td>"female"</td><td>"Gentoo"</td><td>0.168605</td></tr><tr><td>"female"</td><td>"Chinstrap"</td><td>0.098837</td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="unique-values" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="unique-values"><span class="header-section-number">5.3.3</span> <code>unique</code> values</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="df_images/unique.svg" class="img-fluid figure-img" style="width:35.0%"></p>
+<p></p><figcaption class="figure-caption"><code>unique</code> returns distinct observations</figcaption><p></p>
+</figure>
+</div>
+<p>An array of unique values for a column or <code>DataFrame</code> can be obtained via <code>unique</code>:</p>
+<div class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>(penguins</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a> .select(<span class="st">"species"</span>)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a> .unique()</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="83">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (3, 1)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>species</th></tr><tr><td>str</td></tr></thead><tbody><tr><td>"Adelie"</td></tr><tr><td>"Chinstrap"</td></tr><tr><td>"Gentoo"</td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="exercise-3" class="level3" data-number="5.3.4">
+<h3 data-number="5.3.4" class="anchored" data-anchor-id="exercise-3"><span class="header-section-number">5.3.4</span> Exercise</h3>
+<ol type="1">
+<li>What’s the average bill_length of the penguins by island?</li>
+<li>Is there an island where the distribution of <code>males</code> and <code>females</code> differs across species?</li>
+<li>What’s the maximum weight reported by a penguin and to which species does it belong?</li>
+</ol>
+</section>
+</section>
+<section id="timeseries-specific-functionality" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="timeseries-specific-functionality"><span class="header-section-number">5.4</span> Timeseries specific functionality</h2>
+<p>In this section we’ll discuss rolling functions, lagging, datetimes and durations. For that purpose we’ll use the <code>covidmx.parquet</code> file.</p>
+<div class="cell" data-execution_count="102">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>covidmx <span class="op">=</span> pl.read_parquet(<span class="st">"covidmx.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="93">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>covidmx.glimpse() <span class="co">#This thing is huge!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 20172065
+Columns: 40
+$ FECHA_ACTUALIZACION   &lt;str&gt; 2023-08-08, 2023-08-08, 2023-08-08, 2023-08-08, 2023-08-08, 2023-08-08, 2023-08-08, 2023-08-08, 2023-08-08, 2023-08-08
+$ ID_REGISTRO           &lt;str&gt; 0ed066, accf18, 65b38d, a9c809, 5db8d9, 8004ba, 7ced56, e19494, 80989f, e9cf4c
+$ ORIGEN                &lt;str&gt; 2, 2, 2, 2, 1, 1, 2, 1, 2, 2
+$ SECTOR                &lt;str&gt; 12, 12, 12, 12, 12, 12, 12, 12, 12, 12
+$ ENTIDAD_UM            &lt;str&gt; 16, 07, 09, 03, 19, 19, 09, 19, 07, 11
+$ SEXO                  &lt;str&gt; 2, 2, 2, 2, 2, 1, 2, 2, 1, 2
+$ ENTIDAD_NAC           &lt;str&gt; 16, 07, 09, 03, 19, 19, 08, 28, 07, 11
+$ ENTIDAD_RES           &lt;str&gt; 16, 07, 09, 03, 19, 19, 09, 19, 07, 11
+$ MUNICIPIO_RES         &lt;str&gt; 041, 078, 009, 003, 046, 006, 009, 025, 078, 031
+$ TIPO_PACIENTE         &lt;str&gt; 1, 1, 1, 1, 1, 2, 1, 1, 1, 1
+$ FECHA_INGRESO         &lt;str&gt; 2023-03-09, 2023-01-19, 2023-03-09, 2023-03-14, 2023-01-01, 2023-01-01, 2023-03-04, 2023-04-15, 2023-01-19, 2023-03-28
+$ FECHA_SINTOMAS        &lt;str&gt; 2023-03-06, 2023-01-15, 2023-03-07, 2023-03-10, 2023-01-01, 2023-01-01, 2023-03-01, 2023-04-15, 2023-01-14, 2023-03-24
+$ FECHA_DEF             &lt;str&gt; 9999-99-99, 9999-99-99, 9999-99-99, 9999-99-99, 9999-99-99, 9999-99-99, 9999-99-99, 9999-99-99, 9999-99-99, 9999-99-99
+$ INTUBADO              &lt;str&gt; 97, 97, 97, 97, 97, 2, 97, 97, 97, 97
+$ NEUMONIA              &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ EDAD                  &lt;str&gt; 28, 20, 26, 47, 39, 2, 14, 51, 43, 64
+$ NACIONALIDAD          &lt;str&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+$ EMBARAZO              &lt;str&gt; 97, 97, 97, 97, 97, 2, 97, 97, 2, 97
+$ HABLA_LENGUA_INDIG    &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ INDIGENA              &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ DIABETES              &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ EPOC                  &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ ASMA                  &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ INMUSUPR              &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ HIPERTENSION          &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ OTRA_COM              &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ CARDIOVASCULAR        &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ OBESIDAD              &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ RENAL_CRONICA         &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ TABAQUISMO            &lt;str&gt; 1, 2, 2, 2, 2, 2, 2, 2, 2, 2
+$ OTRO_CASO             &lt;str&gt; 2, 2, 1, 2, 2, 2, 2, 2, 2, 2
+$ TOMA_MUESTRA_LAB      &lt;str&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 1
+$ RESULTADO_LAB         &lt;str&gt; 97, 97, 97, 97, 97, 97, 97, 97, 97, 2
+$ TOMA_MUESTRA_ANTIGENO &lt;str&gt; 1, 1, 1, 1, 2, 2, 1, 2, 2, 1
+$ RESULTADO_ANTIGENO    &lt;str&gt; 2, 1, 2, 2, 97, 97, 2, 97, 97, 2
+$ CLASIFICACION_FINAL   &lt;str&gt; 7, 3, 7, 7, 6, 6, 7, 6, 6, 7
+$ MIGRANTE              &lt;str&gt; 99, 99, 99, 99, 99, 99, 99, 99, 99, 99
+$ PAIS_NACIONALIDAD     &lt;str&gt; México, México, México, México, México, México, México, México, México, México
+$ PAIS_ORIGEN           &lt;str&gt; 97, 97, 97, 97, 97, 97, 97, 97, 97, 97
+$ UCI                   &lt;str&gt; 97, 97, 97, 97, 97, 2, 97, 97, 97, 97
+</code></pre>
+</div>
+</div>
+<p>There are a lot of variables here. However, we’ll just keep the following:</p>
+<ul>
+<li><p><strong>FECHA_INGRESO</strong>: Database registry date (date when the case was registered in the database)</p></li>
+<li><p><strong>EDAD</strong>: Age in years of the person</p></li>
+<li><p><strong>TIPO_PACIENTE</strong> Type of patient 1 = outpatient, 2 = hospitalized</p></li>
+<li><p><strong>FECHA_SINTOMAS</strong> Date of symptom onset of the patient</p></li>
+<li><p><strong>FECHA_DEF</strong> Date of patient’s death (9999-99-99 if the person is alive)</p></li>
+</ul>
+<p>We start by keeping only these columns and renaming them:</p>
+<div class="cell" data-execution_count="103">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>covidmx <span class="op">=</span> (covidmx</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>           .select(pl.col(<span class="st">"FECHA_INGRESO"</span>,<span class="st">"EDAD"</span>,<span class="st">"TIPO_PACIENTE"</span>,<span class="st">"FECHA_SINTOMAS"</span>,<span class="st">"FECHA_DEF"</span>))</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>           .rename({<span class="st">"FECHA_INGRESO"</span>: <span class="st">"DATE_OF_REGISTRY"</span>, </span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"EDAD"</span>: <span class="st">"AGE"</span>,</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"TIPO_PACIENTE"</span>: <span class="st">"PATIENT_TYPE"</span>,</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"FECHA_SINTOMAS"</span>: <span class="st">"DATE_OF_SYMPTOM_ONSET"</span>,</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"FECHA_DEF"</span>: <span class="st">"DATE_OF_DEATH"</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="98">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>covidmx.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="98">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 5)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>DATE_OF_REGISTRY</th><th>AGE</th><th>PATIENT_TYPE</th><th>DATE_OF_SYMPTOM_ONSET</th><th>DATE_OF_DEATH</th></tr><tr><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>"2023-03-09"</td><td>"28"</td><td>"1"</td><td>"2023-03-06"</td><td>"9999-99-99"</td></tr><tr><td>"2023-01-19"</td><td>"20"</td><td>"1"</td><td>"2023-01-15"</td><td>"9999-99-99"</td></tr><tr><td>"2023-03-09"</td><td>"26"</td><td>"1"</td><td>"2023-03-07"</td><td>"9999-99-99"</td></tr><tr><td>"2023-03-14"</td><td>"47"</td><td>"1"</td><td>"2023-03-10"</td><td>"9999-99-99"</td></tr><tr><td>"2023-01-01"</td><td>"39"</td><td>"1"</td><td>"2023-01-01"</td><td>"9999-99-99"</td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="casting" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="casting"><span class="header-section-number">5.5</span> Casting</h2>
+<p>Notice that in the previous dataset <code>AGE</code> was read as a string (<code>str</code>) and the dates of registry, symptom onset and death were also read as strings. We can change them to integer (<code>AGE</code>) and dates (all other) via casting.</p>
+<div class="cell" data-execution_count="104">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Transform age to an integer</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>covidmx <span class="op">=</span> (covidmx</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>           .with_columns(</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>               pl.col(<span class="st">"AGE"</span>).cast(pl.Int64)</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>           ))</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>covidmx.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="104">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 5)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>DATE_OF_REGISTRY</th><th>AGE</th><th>PATIENT_TYPE</th><th>DATE_OF_SYMPTOM_ONSET</th><th>DATE_OF_DEATH</th></tr><tr><td>str</td><td>i64</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>"2023-03-09"</td><td>28</td><td>"1"</td><td>"2023-03-06"</td><td>"9999-99-99"</td></tr><tr><td>"2023-01-19"</td><td>20</td><td>"1"</td><td>"2023-01-15"</td><td>"9999-99-99"</td></tr><tr><td>"2023-03-09"</td><td>26</td><td>"1"</td><td>"2023-03-07"</td><td>"9999-99-99"</td></tr><tr><td>"2023-03-14"</td><td>47</td><td>"1"</td><td>"2023-03-10"</td><td>"9999-99-99"</td></tr><tr><td>"2023-01-01"</td><td>39</td><td>"1"</td><td>"2023-01-01"</td><td>"9999-99-99"</td></tr></tbody></table></div>
+</div>
+</div>
+<p>Dates can also be casted by specifying the format. In this case they are year, month, day:</p>
+<div class="cell" data-execution_count="111">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>covidmx <span class="op">=</span> (covidmx</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>   cs.starts_with(<span class="st">"DATE"</span>).<span class="bu">str</span>.strptime(pl.Datetime, <span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>, strict<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>covidmx.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="111">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 5)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>DATE_OF_REGISTRY</th><th>AGE</th><th>PATIENT_TYPE</th><th>DATE_OF_SYMPTOM_ONSET</th><th>DATE_OF_DEATH</th></tr><tr><td>datetime[μs]</td><td>i64</td><td>str</td><td>datetime[μs]</td><td>datetime[μs]</td></tr></thead><tbody><tr><td>2023-03-09 00:00:00</td><td>28</td><td>"1"</td><td>2023-03-06 00:00:00</td><td>null</td></tr><tr><td>2023-01-19 00:00:00</td><td>20</td><td>"1"</td><td>2023-01-15 00:00:00</td><td>null</td></tr><tr><td>2023-03-09 00:00:00</td><td>26</td><td>"1"</td><td>2023-03-07 00:00:00</td><td>null</td></tr><tr><td>2023-03-14 00:00:00</td><td>47</td><td>"1"</td><td>2023-03-10 00:00:00</td><td>null</td></tr><tr><td>2023-01-01 00:00:00</td><td>39</td><td>"1"</td><td>2023-01-01 00:00:00</td><td>null</td></tr></tbody></table></div>
+</div>
+</div>
+<p>To calculate the difference between the date of symptom onset and the registry we create a new variable of type <code>duration</code>:</p>
+<div class="cell" data-execution_count="114">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>covidmx <span class="op">=</span> (covidmx</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>   (pl.col(<span class="st">"DATE_OF_REGISTRY"</span>) <span class="op">-</span> pl.col(<span class="st">"DATE_OF_SYMPTOM_ONSET"</span>)).alias(<span class="st">"TIME_TILL_REGISTRY"</span>)</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>covidmx.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="114">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (5, 6)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>DATE_OF_REGISTRY</th><th>AGE</th><th>PATIENT_TYPE</th><th>DATE_OF_SYMPTOM_ONSET</th><th>DATE_OF_DEATH</th><th>TIME_TILL_REGISTRY</th></tr><tr><td>datetime[μs]</td><td>i64</td><td>str</td><td>datetime[μs]</td><td>datetime[μs]</td><td>duration[μs]</td></tr></thead><tbody><tr><td>2023-03-09 00:00:00</td><td>28</td><td>"1"</td><td>2023-03-06 00:00:00</td><td>null</td><td>3d</td></tr><tr><td>2023-01-19 00:00:00</td><td>20</td><td>"1"</td><td>2023-01-15 00:00:00</td><td>null</td><td>4d</td></tr><tr><td>2023-03-09 00:00:00</td><td>26</td><td>"1"</td><td>2023-03-07 00:00:00</td><td>null</td><td>2d</td></tr><tr><td>2023-03-14 00:00:00</td><td>47</td><td>"1"</td><td>2023-03-10 00:00:00</td><td>null</td><td>4d</td></tr><tr><td>2023-01-01 00:00:00</td><td>39</td><td>"1"</td><td>2023-01-01 00:00:00</td><td>null</td><td>0µs</td></tr></tbody></table></div>
+</div>
+</div>
+<p>This variable assigns its own time (notice the miliseconds and the day scales) but can be casted into an integer giving the number of days</p>
+<div class="cell" data-execution_count="115">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>covidmx <span class="op">=</span> (covidmx</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a> .with_columns(</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>   pl.col(<span class="st">"TIME_TILL_REGISTRY"</span>).dt.days() <span class="co">#Get days as integer</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>covidmx.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="rolling-functions" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="rolling-functions"><span class="header-section-number">5.6</span> Rolling functions</h2>
+<p>Let’s aggregate the patients by counting the number of patients per date of registry so that we get the number of cases per day</p>
+<div class="cell" data-execution_count="118">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>covidmx <span class="op">=</span> (covidmx</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a> .groupby(<span class="st">"DATE_OF_SYMPTOM_ONSET"</span>)</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a> .agg(pl.count())</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A quick look at the data reveals a lot of noise:</p>
+<div class="cell" data-execution_count="124">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> <span class="st">"DATE_OF_SYMPTOM_ONSET"</span>, y <span class="op">=</span> <span class="st">"count"</span>, data <span class="op">=</span> covidmx.to_pandas())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="124">
+<pre><code>&lt;Axes: xlabel='DATE_OF_SYMPTOM_ONSET', ylabel='count'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="basic_polars_files/figure-html/cell-59-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Plotting the rolling mean (i.e.&nbsp;the number of cases at day <em>k</em> is estimated as the average of the days from <em>k - m/2</em> to <em>k + m/2</em></p>
+<div class="cell" data-execution_count="127">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>covidmx <span class="op">=</span> (covidmx</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>           .sort(<span class="st">"DATE_OF_SYMPTOM_ONSET"</span>) <span class="co">#First arrange by date</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>           .with_columns(</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>               pl.col(<span class="st">"count"</span>).rolling_mean(window_size<span class="op">=</span><span class="dv">7</span>).alias(<span class="st">"smoothed_count"</span>),</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>            ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="128">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> <span class="st">"DATE_OF_SYMPTOM_ONSET"</span>, y <span class="op">=</span> <span class="st">"smoothed_count"</span>, data <span class="op">=</span> covidmx.to_pandas())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="128">
+<pre><code>&lt;Axes: xlabel='DATE_OF_SYMPTOM_ONSET', ylabel='smoothed_count'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="basic_polars_files/figure-html/cell-61-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Another useful grouping mechanism is the <code>groupby_dynamic</code> which allows to group by <code>week</code>, <code>year</code> or other time range from a date. For example, to get all cases in a year we can do the following:</p>
+<div class="cell" data-execution_count="129">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>(covidmx</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a> .groupby_dynamic(<span class="st">"DATE_OF_SYMPTOM_ONSET"</span>, every<span class="op">=</span><span class="st">"1y"</span>)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a> .agg(pl.col(<span class="st">"count"</span>).<span class="bu">sum</span>())</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="129">
+
+<div><style>
+.dataframe > thead > tr > th,
+.dataframe > tbody > tr > td {
+  text-align: right;
+}
+</style>
+<small>shape: (4, 2)</small><table class="dataframe table table-sm table-striped"><thead><tr><th>DATE_OF_SYMPTOM_ONSET</th><th>count</th></tr><tr><td>datetime[μs]</td><td>u32</td></tr></thead><tbody><tr><td>2020-01-01 00:00:00</td><td>3868396</td></tr><tr><td>2021-01-01 00:00:00</td><td>8830345</td></tr><tr><td>2022-01-01 00:00:00</td><td>6451944</td></tr><tr><td>2023-01-01 00:00:00</td><td>1021380</td></tr></tbody></table></div>
+</div>
+</div>
+<section id="writing" class="level3" data-number="5.6.1">
+<h3 data-number="5.6.1" class="anchored" data-anchor-id="writing"><span class="header-section-number">5.6.1</span> Writing</h3>
+<p>Once we are done with our data we can save the dataset in <code>parquet</code> format which can be read in most programs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>covidmx.write_parquet(<span class="st">"covid_updated.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exercise-4" class="level3" data-number="5.6.2">
+<h3 data-number="5.6.2" class="anchored" data-anchor-id="exercise-4"><span class="header-section-number">5.6.2</span> Exercise</h3>
+<ol type="1">
+<li><p>The variable <code>SEXO</code> encodes <code>sex</code> with <code>1= Male</code> and <code>2 = Female</code>. Use this to decide whether males or females die more (proportionally) of COVID (<code>CLASIFICACION_FINAL = 5</code>).</p></li>
+<li><p>A common prediction benchmark is to use the mean of the previous period to predict the next one. Calculate the mean of the previous week and use it to predict the next week for all of the observed periods. Use the root mean squared error to estimate how good/bad is this model.</p></li>
+<li><p>Does the day of the week seem to influence how much time it takes for an individual to be registered?</p></li>
+</ol>
+</section>
+</section>
+<section id="where-to-go-from-here" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="where-to-go-from-here"><span class="header-section-number">5.7</span> Where to go from here?</h2>
+<p>The <a href="https://pola-rs.github.io/polars/py-polars/html/reference/expressions/index.html">Api reference</a> is a great place to learn about more <code>polars</code> functions. That, accompanied with the <a href="https://pola-rs.github.io/polars-book/">book</a> teaches you all of the <code>polars</code> basics you need. Note that this guide hasn’t taught you all of polars’ functions but the necessary to get started.</p>
+<p>If you still feel you need another guide, I recommend Matt Harrison’s tutorial on polars to improve your knowledge</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CJ0f45evuME" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="">
+</iframe>
 </section>
 </section>
 
